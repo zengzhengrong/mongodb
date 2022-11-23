@@ -1,0 +1,21 @@
+{{- if .Values.mongoExpress.enabled -}}
+{{- if .Values.mongoExpress.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "mongodb.name" . }}-express
+spec:
+  ingressClassName: {{ .Values.mongoExpress.ingress.ingressClassName }}
+  rules:
+  - host: {{ .Values.mongoExpress.ingress.host }}
+    http:
+      paths:
+      - path: {{ .Values.mongoExpress.ingress.path }}
+        pathType: {{ .Values.mongoExpress.ingress.pathType }}
+        backend:
+          service:
+            name: {{ include "mongodb.name" . }}-express
+            port:
+              number: 80
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,18 @@
+{{- if .Values.mongoExpress.enabled }}
+kind: Service
+apiVersion: v1
+metadata:
+  name:  {{ include "mongodb.name" . }}-express
+spec:
+  selector:
+    app:  {{ include "mongodb.name" . }}-express
+  type:  {{ .Values.mongoExpress.service.type }}
+  ports:
+  - name:  http
+    port:  80
+    targetPort:  8081
+    {{- if eq .Values.mongoExpress.service.type "NodePort" }}
+    nodePort: {{ .Values.mongoExpress.service.nodePort }}
+    {{- end }}
+
+{{- end }}

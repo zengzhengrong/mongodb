@@ -1,0 +1,34 @@
+{{- if .Values.mongoExpress.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ include "mongodb.name" . }}-express
+  labels:
+    app:  {{ include "mongodb.name" . }}-express
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "mongodb.name" . }}-express
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  {{ include "mongodb.name" . }}-express
+    spec:
+      containers:
+      - name:  {{ include "mongodb.name" . }}-express
+        image:  "{{- .Values.mongoExpress.image.repository -}}:{{- .Values.mongoExpress.image.tag -}}"
+        resources:
+          {{- toYaml .Values.mongoExpress.resources | nindent 10 }}
+        env:
+        {{- range .Values.mongoExpress.envs }}
+        - name: {{ .name }}
+          value: {{ .value | default "" | quote }}
+        {{- end }}
+        - name: ME_CONFIG_MONGODB_URL
+          value: {{ .Values.mongoExpress.mongodbUrl }}
+        ports:
+        - containerPort: 8081
+          name:  http
+      restartPolicy: Always
+{{- end }}

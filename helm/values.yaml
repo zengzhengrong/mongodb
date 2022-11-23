@@ -280,3 +280,35 @@ backup:
   securityContext: {}
   tolerations: []
   podAnnotations: {}
+
+# See https://github.com/mongo-express/mongo-express
+mongoExpress:
+  enabled: false
+  mongodbUrl: "mongodb://mongodb:27017"
+  image:
+    repository: mongo-express
+    tag: latest
+    pullPolicy: "IfNotPresent"
+  envs:
+  - name: ME_CONFIG_OPTIONS_EDITORTHEME
+    value: "ambiance"
+  - name: ME_CONFIG_BASICAUTH_USERNAME
+    value: "" # unable base auth
+  service:
+    type: ClusterIP
+    nodePort: ""
+  ingress:
+    enabled: false
+    ingressClassName: nginx
+    host: mongo-express.localhost
+    path: /
+    pathType: Prefix
+  resources:
+    requests:
+      cpu: 10m
+      memory: 10Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    
+  
